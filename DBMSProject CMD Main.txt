@@ -1,0 +1,81 @@
+	DataSource dataSource=new DataSource();
+        boolean inserted=false;
+
+        if(dataSource.open()==false)
+        {
+            System.out.println("Can't open datasource");
+        }
+
+        dataSource.create();
+
+        System.out.println("Table Students : \n");
+
+        List<Students> studentsList=dataSource.queryStudents(dataSource.ORDER_BY_DESC);
+        if(studentsList.isEmpty())
+            System.out.println("No Students!!");
+        else
+            for(Students student:studentsList)
+                System.out.println("Student ID : "+student.getStudent_id()+",Student Name : "+student.getStudent_name()+",Age : "+student.getAge());
+
+        System.out.println("\nTable Projects : \n");
+
+        List<Projects> projectsList=dataSource.queryProjects(dataSource.ORDER_BY_ASC);
+        if(projectsList.isEmpty())
+            System.out.println("No Projects!!");
+        for(Projects project:projectsList)
+            System.out.println("Project ID : "+project.getProject_id()+",Project Name : "+project.getProject_name()+
+                    ",Starting Date : "+project.getProject_starting_date().toString()+",Ending date : "+project.getProject_end_date().toString());
+
+        System.out.println("\nTable Professors : \n");
+
+        List<Professors> professorsList=dataSource.queryProfessors(dataSource.ORDER_BY_NONE);
+        if(professorsList.isEmpty())
+            System.out.println("No Professors!!");
+        else
+            for(Professors professor:professorsList)
+                System.out.format("Professor ID : %d,Professor Name : %s,Department Name : %s\n",professor.getProfessor_id(),professor.getProfessor_name(),professor.getDeptname());
+
+        System.out.println("\nTable WorksOn : \n");
+
+        List<WorksOn> worksOnList=dataSource.queryWorksOn(dataSource.ORDER_BY_ASC);
+        if(worksOnList.isEmpty())
+            System.out.format("None of the projects assigned to the students!!\n");
+        else
+            for(WorksOn worksOn:worksOnList)
+                System.out.format("Student ID : %d,Stdent Name : %s,Project ID : %d,Project Name : %s\n",worksOn.getStudentID(),worksOn.getStudentName(),worksOn.getProjectID(),worksOn.getProjectName());
+
+        System.out.println("\nTable Supervises : \n");
+
+        List<Supervises> supervisesList=dataSource.querySupervises(dataSource.ORDER_BY_ASC);
+        if(supervisesList.isEmpty())
+            System.out.format("None of the professors are supervising any of the students!!\n");
+        else
+            for(Supervises supervises:supervisesList)
+                System.out.format("Student ID : %d,Student Name : %s,Professor ID : %d,Professor Name : %s\n",supervises.getStudentID(),supervises.getStudentName(),supervises.getProfessorID(),supervises.getProfessorName());
+
+        System.out.println("\nTable Manages : \n");
+
+        List<Manages> managesList=dataSource.queryManages(dataSource.ORDER_BY_DESC);
+        if(managesList.isEmpty())
+            System.out.format("None of the professors are managing any of the projects!!\n");
+        else
+            for(Manages manages:managesList)
+                System.out.format("Project ID : %d,Project Name : %s,Professor ID : %d,Professor Name : %s\n",manages.getProjectID(),manages.getProjectName(),manages.getProfessorID(),manages.getProfessorName());
+
+        try
+        {
+            inserted=dataSource.insertIntoStudents(014, "Benitha", 19);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e);
+            //e.printStackTrace();
+        }
+        if(inserted==true) {
+            System.out.println("\nInserted Student!!\n");
+            inserted = false;
+        }
+        else
+            System.out.println("\nStudent not Inserted!!\n");
+
+        dataSource.close();
